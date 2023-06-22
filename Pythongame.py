@@ -6,7 +6,7 @@ import math
 py.init()
 
 # Background
-background = py.image.load('backround.png')
+background = py.image.load('background.png')
 
 #create screen
 screen=py.display.set_mode((800,385))
