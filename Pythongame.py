@@ -11,7 +11,7 @@ background = py.image.load('background.png')
 #create screen
 screen=py.display.set_mode((800,385))
 
-py.display.set_caption("2 Player Racing")
+py.display.set_caption("Racing")
 icon = py.image.load('car.png')
 
 
@@ -28,31 +28,48 @@ playerY_change = 0
 def player(x, y):
     screen.blit(playerImg, (x, y))
 
-#enemies 
+#enemies
+
 rock = py.image.load('rock.png')
-rockX = 700
-rockY = random.randint(10,375)
-rockX_change=-1
-def moveRock(x):
-    screen.blit(rock, (x,rockY))
-
 car= py.image.load('enemy.png')
-carX = 700
-carY = random.randint(10,375)
-carX_change=-1
-def movecar(x):
-    screen.blit(car, (x,carY))
 
+enimies= []
+X=[]
+Y=[]
+ac=[]
+accel=0
+num=10
 
-def isCollision(enemyX, enemyY, bulletX, bulletY):
-    distance = math.sqrt(math.pow(enemyX - bulletX, 2) + (math.pow(enemyY - bulletY, 2)))
+for i in range(num):
+    accel-=0.1
+    # if i%2==0:
+    #     enimies.append(rock)        
+    # else:
+    #      enimies.append(car)
+    X.append(700)
+    Y.append(random.randint(10,375))
+    ac.append(accel)
+    
+def moveRock(x,y):
+    screen.blit(rock, (x,y))
+def movecar(x,y):
+    screen.blit(car, (x,y))
+def isCollision(enemyX, enemyY, userX, userY):
+    distance = math.sqrt(math.pow(enemyX - userX, 2) + (math.pow(enemyY - userY, 2)))
     if distance < 27:
         return True
     else:
         return False
-#how to change colour
-# screen.fill((255,0,0))
-# py.display.update()
+def show_lives(x, y):
+    score = font.render("Lives : " + str(lives), True, (255, 255, 255))
+    screen.blit(score, (x, y))
+
+#text lives
+lives=3
+font = py.font.Font('freesansbold.ttf', 32)
+textX = 10
+testY = 10
+
 
 py.display.set_icon(icon)
 running=True
@@ -62,6 +79,7 @@ while running:
 
 
     for event in py.event.get():
+
         if event.type== py.QUIT:
             running=False
 
@@ -80,10 +98,27 @@ while running:
                 playerX_change=0
             if  event.key == py.K_UP or event.key == py.K_DOWN:
                 playerY_change=0
+
+
+
+
+
+
     playerX+=playerX_change
     playerY+=playerY_change
-    rockX+=rockX_change
-    carX+=carX_change
+    for i in enimies:
+        print(enimies)
+        X[i]+=ac[i]
+        movecar(X[i],Y[i])
+
+        # moveRock(X[i],Y[i])
+        c=isCollision(X[i],Y[i],playerX,playerY)
+
+        if c:
+            lives-=1
+            X[i]=-10
+            Y[i]=-10
+
     if playerX <= 0:
         playerX = 0
     elif playerX >= 738:
@@ -92,10 +127,15 @@ while running:
         playerY = -10
     elif playerY >= 345:
         playerY = 345
+    
+
+
+  
     player(playerX,playerY)
-    moveRock(rockX)
-    movecar(carX)
+
+    show_lives(textX,testY)
     py.display.update()
+  
     
 
 
