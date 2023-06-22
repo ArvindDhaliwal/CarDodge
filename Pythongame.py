@@ -1,5 +1,6 @@
 # Example file showing a basic pygame "game loop"
 import pygame as py
+from pygame import mixer
 import random
 import math
 # pygame setup constructer/initilize
@@ -38,10 +39,10 @@ X=[]
 Y=[]
 ac=[]
 accel=0
-num=10
+num=8
 
 for i in range(num):
-    accel-=0.1
+    accel-=0.2
     # if i%2==0:
     #     enimies.append(rock)        
     # else:
@@ -49,7 +50,7 @@ for i in range(num):
     X.append(700)
     Y.append(random.randint(10,375))
     ac.append(accel)
-    
+
 def moveRock(x,y):
     screen.blit(rock, (x,y))
 def movecar(x,y):
@@ -63,13 +64,18 @@ def isCollision(enemyX, enemyY, userX, userY):
 def show_lives(x, y):
     score = font.render("Lives : " + str(lives), True, (255, 255, 255))
     screen.blit(score, (x, y))
+def game_over_text():
+    over_text = over_font.render("GAME OVER", True, (255, 255, 255))
+    screen.blit(over_text, (200, 250))
 
 #text lives
 lives=3
 font = py.font.Font('freesansbold.ttf', 32)
 textX = 10
-testY = 10
+textY = 10
 
+# Game Over
+over_font = py.font.Font('freesansbold.ttf', 64)
 
 py.display.set_icon(icon)
 running=True
@@ -93,6 +99,7 @@ while running:
                 playerY_change= -1
             if event.key == py.K_DOWN:
                 playerY_change= 1
+
         if event.type == py.KEYUP:
             if event.key == py.K_LEFT or event.key == py.K_RIGHT:
                 playerX_change=0
@@ -106,19 +113,29 @@ while running:
 
     playerX+=playerX_change
     playerY+=playerY_change
-    for i in enimies:
-        print(enimies)
-        X[i]+=ac[i]
-        movecar(X[i],Y[i])
+    k=0
+    
+    for k in range(num):
+        X[k]+=ac[k]
 
-        # moveRock(X[i],Y[i])
-        c=isCollision(X[i],Y[i],playerX,playerY)
+        if(k%2==0):
+            movecar(int(X[k]),int(Y[k]))
+        else:
+            moveRock(X[i],Y[i])
+        c=isCollision(X[k],Y[k],playerX,playerY)
 
         if c:
+            sound=mixer.Sound("CarCrash.mp3")
+            sound.play()
             lives-=1
-            X[i]=-10
-            Y[i]=-10
-
+            X[k]=-10
+            Y[k]=-10
+        if X[k]<0:
+            X[k]=700
+            Y[k]=random.randint(10,375)
+        if lives<0:
+            game_over_text()
+            break;
     if playerX <= 0:
         playerX = 0
     elif playerX >= 738:
@@ -133,7 +150,7 @@ while running:
   
     player(playerX,playerY)
 
-    show_lives(textX,testY)
+    show_lives(textX,textY)
     py.display.update()
   
     
