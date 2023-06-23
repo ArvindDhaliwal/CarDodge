@@ -68,8 +68,8 @@ def isCollision(enemyX, enemyY, userX, userY):
 
 
 def show_lives(x, y):
-    score = font.render("Lives : " + str(lives), True, (255, 255, 255))
-    screen.blit(score, (x, y))
+    sc = font.render("Lives : " + str(lives) +" Score: "+str(score), True, (255, 255, 255))
+    screen.blit(sc, (x, y))
 
 
 def game_over_text():
