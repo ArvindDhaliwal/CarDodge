@@ -138,9 +138,9 @@ while running:
         if c:
             lives -= 1
             if lives==0:
-                sound1 = mixer.Sound("end.mp3")
+                sound1 = mixer.Sound("ending.mp3")
                 sound1.play()
-            sound = mixer.Sound("CarCrash.mp3")
+            sound = mixer.Sound("vine.mp3")
             sound.play()
             X[k] = 800
             Y[k] = random.randint(10, 375)
