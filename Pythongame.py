@@ -10,7 +10,7 @@ background = py.image.load('background.png')
 # create screen
 screen = py.display.set_mode((800, 385))
 
-py.display.set_caption("Racing")
+py.display.set_caption("CarDodge")
 icon = py.image.load('car.png')
 
 
