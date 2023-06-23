@@ -1,11 +1,9 @@
-# Example file showing a basic pygame "game loop"
 import pygame as py
 from pygame import mixer
 import random
 import math
 # pygame setup constructer/initilize
 py.init()
-
 # Background
 background = py.image.load('background.png')
 
@@ -39,8 +37,8 @@ X = []
 Y = []
 ac = []
 accel = 0
-num = 5
-
+num = 7
+score=0
 for i in range(num):
     accel -= 0.2
     # if i%2==0:
@@ -75,8 +73,12 @@ def show_lives(x, y):
 
 
 def game_over_text():
-    over_text = over_font.render("GAME OVER", True, (255, 255, 255))
-    screen.blit(over_text, (200, 250))
+
+    over_text = over_font.render("GAME OVER ", True, (255, 255, 255))
+    screen.blit(over_text, (192, 250))
+    over_text = over_font.render("Score:"+str(score), True, (255, 255, 255))
+    screen.blit(over_text, (192, 100))
+
 
 
 # text lives
@@ -102,13 +104,13 @@ while running:
         # if keystroke is pressed check if right or left
         if event.type == py.KEYDOWN:
             if event.key == py.K_LEFT:
-                playerX_change = -1
+                playerX_change = -1.2
             if event.key == py.K_RIGHT:
-                playerX_change = 1
+                playerX_change = 1.2
             if event.key == py.K_UP:
-                playerY_change = -1
+                playerY_change = -1.2
             if event.key == py.K_DOWN:
-                playerY_change = 1
+                playerY_change = 1.2
 
         if event.type == py.KEYUP:
             if event.key == py.K_LEFT or event.key == py.K_RIGHT:
@@ -122,7 +124,6 @@ while running:
 
     for k in range(num):
         if lives <= 0:
-
             game_over_text()
             break
         ac[k] -= 0.001
@@ -135,15 +136,19 @@ while running:
         c = isCollision(X[k], Y[k], playerX, playerY)
 
         if c:
+            lives -= 1
+            if lives==0:
+                sound1 = mixer.Sound("end.mp3")
+                sound1.play()
             sound = mixer.Sound("CarCrash.mp3")
             sound.play()
-            lives -= 1
-            X[k] = -10
-            Y[k] = -10
-        movecar(X[k], Y[k])
-        if X[k] < 0:
             X[k] = 800
             Y[k] = random.randint(10, 375)
+        movecar(X[k], Y[k])
+        if X[k] < -10:
+            X[k] = 800
+            Y[k] = random.randint(10, 375)
+            score+=1
 
     if playerX <= 0:
         playerX = 0
