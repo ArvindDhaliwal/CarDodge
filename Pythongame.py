@@ -39,6 +39,7 @@ ac = []
 accel = 0
 num = 7
 score=0
+# creating array of enimies (store position)
 for i in range(num):
     accel -= 0.2
     # if i%2==0:
@@ -80,8 +81,7 @@ def game_over_text():
     screen.blit(over_text, (192, 100))
 
 
-
-# text lives
+#lives
 lives = 3
 font = py.font.Font('freesansbold.ttf', 32)
 textX = 10
@@ -90,12 +90,16 @@ textY = 10
 # Game Over
 over_font = py.font.Font('freesansbold.ttf', 64)
 
+# infinite loop
 py.display.set_icon(icon)
 running = True
 while running:
+
+    #add background image
     screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
 
+    #go through all events(keys clicked)
     for event in py.event.get():
 
         if event.type == py.QUIT:
@@ -121,7 +125,8 @@ while running:
     playerX += playerX_change
     playerY += playerY_change
     k = 0
-
+    
+    #loop through enimies
     for k in range(num):
         if lives <= 0:
             game_over_text()
@@ -129,10 +134,8 @@ while running:
         ac[k] -= 0.001
         X[k] += ac[k]
 
-        # if(k%2==0):
-        #     movecar(X[k],Y[k])
-        # else:
-        #     moveRock(X[i],Y[i])
+       
+        #check if collision occurs
         c = isCollision(X[k], Y[k], playerX, playerY)
 
         if c:
